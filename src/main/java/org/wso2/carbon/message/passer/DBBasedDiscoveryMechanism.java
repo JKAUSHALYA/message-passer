@@ -18,13 +18,54 @@
 
 package org.wso2.carbon.message.passer;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import javax.sql.DataSource;
 
 public class DBBasedDiscoveryMechanism implements DiscoveryMechanism {
 
-    @Override
-    public List<Node> discover() {
+    private DataSource dataSource;
 
-        return null;
+    @Override
+    public void discover(List<Node> registerNode) {
+        // Do nothing ? Time based db call ?
+    }
+
+    @Override
+    public List<Node> discoverAll() {
+
+        List<Node> nodes = new ArrayList<>();
+
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement getAllNodes = connection.prepareStatement("");
+            try (ResultSet resultSet = getAllNodes.executeQuery()) {
+                while(resultSet.next()) {
+                    Node node = new Node();
+                    String host = resultSet.getString("host");
+                    short port = resultSet.getShort("port");
+                    node.setHostName(host);
+                    node.setPort(port);
+                    nodes.add(node);
+                }
+            }
+        } catch (SQLException e) {
+            // TODO
+        }
+
+        return nodes;
+    }
+
+    @Override
+    public boolean isDiscoverSupport() {
+        return false;
+    }
+
+    @Override
+    public boolean isDiscoverAllSupport() {
+        return true;
     }
 }

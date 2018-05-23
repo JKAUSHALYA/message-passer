@@ -19,8 +19,16 @@
 package org.wso2.carbon.message.passer;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public interface DiscoveryMechanism {
 
-    List<Node> discover();
+    // TODO: Change this method name.
+    void discover(List<Node> nodeList);
+
+    List<Node> discoverAll();
+
+    boolean isDiscoverSupport();
+
+    boolean isDiscoverAllSupport();
 }

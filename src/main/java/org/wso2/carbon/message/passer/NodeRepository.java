@@ -18,16 +18,41 @@
 
 package org.wso2.carbon.message.passer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class NodeRepository {
 
+    private final List<Node> nodeList = new ArrayList<>();
+    private List<DiscoveryMechanism> discoveryMechanisms = new ArrayList<>();
+
+    public NodeRepository() {
+
+        nodeList.addAll(getAllNodes());
+
+        for (DiscoveryMechanism discoveryMechanism : discoveryMechanisms) {
+            if (discoveryMechanism.isDiscoverSupport()) {
+                discoveryMechanism.discover(nodeList);
+            }
+        }
+    }
+
     public List<Node> getAllNodes() {
-        return null;
+
+        for (DiscoveryMechanism discoveryMechanism : discoveryMechanisms) {
+            if (discoveryMechanism.isDiscoverAllSupport()) {
+                return discoveryMechanism.discoverAll();
+            }
+        }
+        return new ArrayList<>();
     }
 
     public void register(Node node) {
+        nodeList.add(node);
+    }
 
+    public void unRegister(Node node) {
+        nodeList.remove(node);
     }
 
 }

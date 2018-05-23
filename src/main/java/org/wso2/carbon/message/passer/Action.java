@@ -21,9 +21,22 @@ package org.wso2.carbon.message.passer;
 public class Action {
 
     private ActionType actionType;
+    private Node node;
+
+    public void setActionType(ActionType actionType) {
+        this.actionType = actionType;
+    }
 
     public ActionType getType() {
         return actionType;
+    }
+
+    public Node getNode() {
+        return node;
+    }
+
+    public void setNode(Node node) {
+        this.node = node;
     }
 
     public enum ActionType {

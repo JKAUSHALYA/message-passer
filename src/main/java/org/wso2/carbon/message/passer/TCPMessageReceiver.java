@@ -27,14 +27,10 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
-public class TCPMessageReceiver implements MessageReceiver {
+public class TCPMessageReceiver extends AbstractMessageReceiver {
 
     private List<MessageReceiveEventHandler> messageReceiveEventHandlerList = new ArrayList<>();
-    private ConcurrentLinkedQueue<Message> receivedMessages = new ConcurrentLinkedQueue<>();
 
     public TCPMessageReceiver(Node node) {
 
@@ -57,22 +53,24 @@ public class TCPMessageReceiver implements MessageReceiver {
         } catch (IOException e) {
             // TODO: Handle this.
         }
-
-        ExecutorService executorService = Executors.newFixedThreadPool(4, new MessageProcessorThreadFactory());
-        executorService.submit(() -> {
-           while (true) {
-               Message message = receivedMessages.poll();
-               if (message == null) {
-                   continue;
-               }
-               processMessage(message);
-           }
-        });
     }
 
-    private void processMessage(Message message) {
+    @Override
+    public void processMessage(Message message) {
+        // TODO: Implement this
 
     }
+
+    @Override
+    public void register(MessageReceiveEventHandler messageReceiveEventHandler) {
+        messageReceiveEventHandlerList.add(messageReceiveEventHandler);
+    }
+
+    @Override
+    public void unregister(MessageReceiveEventHandler messageReceiveEventHandler) {
+        messageReceiveEventHandlerList.remove(messageReceiveEventHandler);
+    }
+
 
     private void receiveMessage(Socket socket) {
 
@@ -92,15 +90,5 @@ public class TCPMessageReceiver implements MessageReceiver {
                 }
             }
         }
-    }
-
-    @Override
-    public void register(MessageReceiveEventHandler messageReceiveEventHandler) {
-        messageReceiveEventHandlerList.add(messageReceiveEventHandler);
-    }
-
-    @Override
-    public void unregister(MessageReceiveEventHandler messageReceiveEventHandler) {
-        messageReceiveEventHandlerList.remove(messageReceiveEventHandler);
     }
 }

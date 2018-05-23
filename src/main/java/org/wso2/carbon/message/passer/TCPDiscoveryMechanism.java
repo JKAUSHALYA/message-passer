@@ -21,7 +21,31 @@ package org.wso2.carbon.message.passer;
 import org.wso2.carbon.message.passer.message.ActionMessage;
 import org.wso2.carbon.message.passer.message.Message;
 
-public class NodeManager implements MessageReceiveEventHandler {
+import java.util.List;
+
+public class TCPDiscoveryMechanism implements DiscoveryMechanism, MessageReceiveEventHandler {
+
+    private List<Node> nodeList;
+
+    @Override
+    public void discover(List<Node> registerNode) {
+        nodeList = registerNode;
+    }
+
+    @Override
+    public List<Node> discoverAll() {
+        return null;
+    }
+
+    @Override
+    public boolean isDiscoverSupport() {
+        return true;
+    }
+
+    @Override
+    public boolean isDiscoverAllSupport() {
+        return false;
+    }
 
     @Override
     public boolean canHandle(Message message) {
@@ -34,12 +58,22 @@ public class NodeManager implements MessageReceiveEventHandler {
         // TODO: Implement this.
         ActionMessage actionMessage = (ActionMessage) message;
         switch (actionMessage.getPayLoad().getType()) {
-            case ADD:
+            case ADD: {
+                Node node = actionMessage.getPayLoad().getNode();
+                nodeList.add(node);
                 break;
-            case REMOVE:
+            }
+            case REMOVE: {
+                Node node = actionMessage.getPayLoad().getNode();
+                nodeList.add(node);
                 break;
-            case UPDATE:
+            }
+            case UPDATE: {
+                // TODO: Check the logic
+                Node node = actionMessage.getPayLoad().getNode();
+                nodeList.add(node);
                 break;
+            }
         }
     }
 }

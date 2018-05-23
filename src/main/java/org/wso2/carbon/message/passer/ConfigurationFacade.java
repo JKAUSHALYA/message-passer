@@ -20,4 +20,9 @@ package org.wso2.carbon.message.passer;
 
 public class ConfigurationFacade {
 
+    public static int getMessageProcessorThreadPoolSize() {
+
+        // TODO: Implement this.
+        return 1;
+    }
 }
