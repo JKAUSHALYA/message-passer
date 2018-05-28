@@ -18,41 +18,69 @@
 
 package org.wso2.carbon.message.passer;
 
+import org.wso2.carbon.message.passer.announce.AnnounceMechanism;
+import org.wso2.carbon.message.passer.discovery.DiscoveryMechanism;
+import org.wso2.carbon.message.passer.exception.MessagePasserException;
+import org.wso2.carbon.message.passer.message.Action;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class NodeRepository {
 
-    private final List<Node> nodeList = new ArrayList<>();
-    private List<DiscoveryMechanism> discoveryMechanisms = new ArrayList<>();
+    private static final List<Node> nodeList = new ArrayList<>();
+    private List<DiscoveryMechanism> discoveryMechanisms;
+    private List<AnnounceMechanism> announceMechanisms;
 
-    public NodeRepository() {
+    public NodeRepository(List<DiscoveryMechanism> discoveryMechanisms, List<AnnounceMechanism> announceMechanisms) {
 
-        nodeList.addAll(getAllNodes());
+        this.discoveryMechanisms = discoveryMechanisms;
+        this.announceMechanisms = announceMechanisms;
 
-        for (DiscoveryMechanism discoveryMechanism : discoveryMechanisms) {
-            if (discoveryMechanism.isDiscoverSupport()) {
-                discoveryMechanism.discover(nodeList);
+        for (DiscoveryMechanism discoveryMechanism : this.discoveryMechanisms) {
+            if (discoveryMechanism.isDiscoverAllSupport()) {
+                nodeList.addAll(discoveryMechanism.discoverAll());
+                break;
             }
+        }
+
+        for (DiscoveryMechanism discoveryMechanism : this.discoveryMechanisms) {
+            if (discoveryMechanism.isDiscoverSupport()) {
+                discoveryMechanism.discover(this::updateNodeList);
+            }
+        }
+    }
+
+    private void updateNodeList(Action action) {
+
+        Node node = action.getNode();
+
+        switch (action.getType()) {
+            case ADD:
+                nodeList.add(node);
+                break;
+            case REMOVE:
+                nodeList.remove(node);
+                break;
+            case UPDATE:
+                int index = nodeList.indexOf(node);
+                if (index > -1) {
+                    nodeList.set(index, node);
+                }
+                break;
         }
     }
 
     public List<Node> getAllNodes() {
-
-        for (DiscoveryMechanism discoveryMechanism : discoveryMechanisms) {
-            if (discoveryMechanism.isDiscoverAllSupport()) {
-                return discoveryMechanism.discoverAll();
-            }
-        }
-        return new ArrayList<>();
+        return nodeList;
     }
 
-    public void register(Node node) {
+    public void register(Node node) throws MessagePasserException {
+
+        for (AnnounceMechanism announceMechanism : announceMechanisms) {
+            announceMechanism.announce(node);
+        }
+
         nodeList.add(node);
     }
-
-    public void unRegister(Node node) {
-        nodeList.remove(node);
-    }
-
 }

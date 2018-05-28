@@ -18,28 +18,30 @@
 
 package org.wso2.carbon.message.passer.message;
 
-public class ActionMessage extends AbstractMessage<Action> {
+import org.wso2.carbon.message.passer.Node;
 
-    private Action action;
+import java.io.Serializable;
 
-    @Override
-    public MessageMetadata getMetadata() {
+public class MessageMetadata implements Serializable {
 
-        return null;
+    private static final long serialVersionUID = 3404922752365071691L;
+
+    private Node recipient;
+    private Node sender;
+
+    public Node getRecipient() {
+        return recipient;
     }
 
-    @Override
-    public void setMetadata(MessageMetadata metadata) {
-
+    public void setRecipient(Node recipient) {
+        this.recipient = recipient;
     }
 
-    @Override
-    public Action getPayLoad() {
-        return this.action;
+    public Node getSender() {
+        return sender;
     }
 
-    @Override
-    public void setPayLoad(Action action) {
-        this.action = action;
+    public void setSender(Node sender) {
+        this.sender = sender;
     }
 }

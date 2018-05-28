@@ -16,22 +16,28 @@
  * under the License.
  */
 
-package org.wso2.carbon.message.passer;
+package org.wso2.carbon.message.passer.receiver;
 
+import org.wso2.carbon.message.passer.ConfigurationFacade;
+import org.wso2.carbon.message.passer.event.MessageReceiveEventHandler;
+import org.wso2.carbon.message.passer.exception.MessagePasserException;
 import org.wso2.carbon.message.passer.message.Message;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public abstract class AbstractMessageReceiver implements MessageReceiver  {
+public abstract class AbstractMessageReceiver implements MessageReceiver {
 
     private static final int MESSAGE_PROCESSOR_THREAD_POOL_SIZE = ConfigurationFacade
             .getMessageProcessorThreadPoolSize();
 
-    protected ConcurrentLinkedQueue<Message> receivedMessages = new ConcurrentLinkedQueue<>();
+    private final ConcurrentLinkedQueue<Message> receivedMessages = new ConcurrentLinkedQueue<>();
+    private final List<MessageReceiveEventHandler> messageReceiveEventHandlerList = new ArrayList<>();
 
-    public AbstractMessageReceiver() {
+    protected AbstractMessageReceiver() throws MessagePasserException {
 
         ExecutorService executorService = Executors.newFixedThreadPool(MESSAGE_PROCESSOR_THREAD_POOL_SIZE,
                 new MessageProcessorThreadFactory());
@@ -41,11 +47,25 @@ public abstract class AbstractMessageReceiver implements MessageReceiver  {
                 if (message == null) {
                     continue;
                 }
-                processMessage(message);
+
+                for (MessageReceiveEventHandler messageReceiveEventHandler : messageReceiveEventHandlerList) {
+                    if (messageReceiveEventHandler.canHandle(message)) {
+                        messageReceiveEventHandler.process(message);
+                    }
+                }
             }
         });
+
+        receiveMessage(receivedMessages::add);
     }
 
-    public abstract void processMessage(Message message);
+    @Override
+    public void register(MessageReceiveEventHandler messageReceiveEventHandler) {
+        messageReceiveEventHandlerList.add(messageReceiveEventHandler);
+    }
 
+    @Override
+    public void unregister(MessageReceiveEventHandler messageReceiveEventHandler) {
+        messageReceiveEventHandlerList.remove(messageReceiveEventHandler);
+    }
 }

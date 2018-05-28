@@ -16,22 +16,7 @@
  * under the License.
  */
 
-package org.wso2.carbon.message.passer.internal;
+package org.wso2.carbon.message.passer.event;
 
-import org.osgi.framework.BundleContext;
-import org.osgi.service.component.ComponentContext;
-import org.osgi.service.component.annotations.Activate;
-import org.osgi.service.component.annotations.Component;
-
-@Component(
-        name = "claim.mgt.component",
-        immediate = true)
-public class MessageBroakerComponent {
-
-
-    @Activate
-    public void activate(ComponentContext componentContext) {
-        BundleContext bundleContext = componentContext.getBundleContext();
-    }
-
+public interface MessageSendEventHandler extends EventHandler {
 }

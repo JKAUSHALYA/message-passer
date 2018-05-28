@@ -16,16 +16,7 @@
  * under the License.
  */
 
-package org.wso2.carbon.message.passer;
+package org.wso2.carbon.message.passer.event;
 
-public class Reciever {
-
-    public void initialize() {
-
-    }
-
-    public MessageReceiver getMessageReciver() {
-        return null;
-    }
-
+public interface MessageReceiveEventHandler extends EventHandler {
 }

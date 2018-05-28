@@ -16,7 +16,10 @@
  * under the License.
  */
 
-package org.wso2.carbon.message.passer;
+package org.wso2.carbon.message.passer.discovery;
+
+import org.wso2.carbon.message.passer.message.Action;
+import org.wso2.carbon.message.passer.Node;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -24,26 +27,27 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import javax.sql.DataSource;
 
 public class DBBasedDiscoveryMechanism implements DiscoveryMechanism {
 
+    private static final String GET_ALL_NODES_SQL = "SELECT * FROM TABLE";
     private DataSource dataSource;
 
     @Override
-    public void discover(List<Node> registerNode) {
-        // Do nothing ? Time based db call ?
+    public void discover(Consumer<Action> updateNodeList) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public List<Node> discoverAll() {
 
         List<Node> nodes = new ArrayList<>();
-
         try (Connection connection = dataSource.getConnection()) {
-            PreparedStatement getAllNodes = connection.prepareStatement("");
+            PreparedStatement getAllNodes = connection.prepareStatement(GET_ALL_NODES_SQL);
             try (ResultSet resultSet = getAllNodes.executeQuery()) {
-                while(resultSet.next()) {
+                while (resultSet.next()) {
                     Node node = new Node();
                     String host = resultSet.getString("host");
                     short port = resultSet.getShort("port");
@@ -55,7 +59,6 @@ public class DBBasedDiscoveryMechanism implements DiscoveryMechanism {
         } catch (SQLException e) {
             // TODO
         }
-
         return nodes;
     }
 

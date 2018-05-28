@@ -16,17 +16,27 @@
  * under the License.
  */
 
-package org.wso2.carbon.message.passer;
+package org.wso2.carbon.message.passer.announce;
 
-import java.util.concurrent.ThreadFactory;
+import org.wso2.carbon.message.passer.Node;
+import org.wso2.carbon.message.passer.exception.MessagePasserException;
 
-public class MessageProcessorThreadFactory implements ThreadFactory {
+import java.sql.Connection;
+import java.sql.SQLException;
+import javax.sql.DataSource;
+
+public class DBBasedAnnounceMechanism implements AnnounceMechanism {
+
+    private DataSource dataSource;
 
     @Override
-    public Thread newThread(Runnable r) {
+    public void announce(Node node) throws MessagePasserException {
 
-        Thread thread = new Thread(r);
-        thread.setName("Message Processor Thread");
-        return thread;
+        try (Connection connection = dataSource.getConnection()) {
+
+        } catch (SQLException e) {
+            throw new MessagePasserException("Error occurred while announcing the node addition.", e);
+        }
+
     }
 }

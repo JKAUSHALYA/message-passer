@@ -16,33 +16,23 @@
  * under the License.
  */
 
-package org.wso2.carbon.message.passer;
+package org.wso2.carbon.message.passer.exception;
 
-public class Action {
+public class ReceiverException extends RuntimeException {
 
-    private ActionType actionType;
-    private Node node;
-
-    public void setActionType(ActionType actionType) {
-        this.actionType = actionType;
+    public ReceiverException() {
+        super();
     }
 
-    public ActionType getType() {
-        return actionType;
+    public ReceiverException(String message) {
+        super(message);
     }
 
-    public Node getNode() {
-        return node;
+    public ReceiverException(Throwable throwable) {
+        super(throwable);
     }
 
-    public void setNode(Node node) {
-        this.node = node;
+    public ReceiverException(String message, Throwable throwable) {
+        super(message, throwable);
     }
-
-    public enum ActionType {
-        ADD,
-        REMOVE,
-        UPDATE
-    }
-
 }

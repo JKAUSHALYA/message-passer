@@ -16,19 +16,13 @@
  * under the License.
  */
 
-package org.wso2.carbon.message.passer;
+package org.wso2.carbon.message.passer.announce;
 
-import java.util.List;
-import java.util.function.Consumer;
+import org.wso2.carbon.message.passer.Node;
+import org.wso2.carbon.message.passer.exception.MessagePasserException;
 
-public interface DiscoveryMechanism {
+public interface AnnounceMechanism {
 
-    // TODO: Change this method name.
-    void discover(List<Node> nodeList);
+    void announce(Node node) throws MessagePasserException;
 
-    List<Node> discoverAll();
-
-    boolean isDiscoverSupport();
-
-    boolean isDiscoverAllSupport();
 }

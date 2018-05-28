@@ -18,8 +18,6 @@
 
 package org.wso2.carbon.message.passer.message;
 
-import org.wso2.carbon.message.passer.MessageMetadata;
-
 public class StringMessage extends AbstractMessage<String> {
 
     private static final long serialVersionUID = -1786856500132228118L;

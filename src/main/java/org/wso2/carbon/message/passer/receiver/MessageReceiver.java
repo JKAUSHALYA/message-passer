@@ -16,13 +16,20 @@
  * under the License.
  */
 
-package org.wso2.carbon.message.passer;
+package org.wso2.carbon.message.passer.receiver;
 
+import org.wso2.carbon.message.passer.event.MessageReceiveEventHandler;
+import org.wso2.carbon.message.passer.exception.MessagePasserException;
 import org.wso2.carbon.message.passer.message.Message;
 
-public interface MessageSender {
+import java.util.function.Consumer;
 
+public interface MessageReceiver {
 
-    void send(Message message);
+    void receiveMessage(Consumer<Message> addToQueue) throws MessagePasserException;
+
+    void register(MessageReceiveEventHandler messageReceiveEventHandler);
+
+    void unregister(MessageReceiveEventHandler messageReceiveEventHandler);
 
 }

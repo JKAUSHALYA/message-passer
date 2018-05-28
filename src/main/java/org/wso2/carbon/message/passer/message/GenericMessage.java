@@ -18,8 +18,6 @@
 
 package org.wso2.carbon.message.passer.message;
 
-import org.wso2.carbon.message.passer.MessageMetadata;
-
 import java.io.Serializable;
 
 public class GenericMessage<T extends Serializable> extends AbstractMessage<T> {

@@ -16,12 +16,17 @@
  * under the License.
  */
 
-package org.wso2.carbon.message.passer;
+package org.wso2.carbon.message.passer.receiver;
 
-public interface MessageReceiver {
+import java.util.concurrent.ThreadFactory;
 
-    void register(MessageReceiveEventHandler messageReceiveEventHandler);
+public class MessageProcessorThreadFactory implements ThreadFactory {
 
-    void unregister(MessageReceiveEventHandler messageReceiveEventHandler);
+    @Override
+    public Thread newThread(Runnable r) {
 
+        Thread thread = new Thread(r);
+        thread.setName("Message-Processor-Thread");
+        return thread;
+    }
 }

@@ -16,14 +16,21 @@
  * under the License.
  */
 
-package org.wso2.carbon.message.passer;
+package org.wso2.carbon.message.passer.discovery;
 
-import org.wso2.carbon.message.passer.message.Message;
+import org.wso2.carbon.message.passer.message.Action;
+import org.wso2.carbon.message.passer.Node;
 
-public interface MessageReceiveEventHandler {
+import java.util.List;
+import java.util.function.Consumer;
 
-    boolean canHandle(Message message);
+public interface DiscoveryMechanism {
 
-    void process(Message message);
+    void discover(Consumer<Action> updateNodeList);
 
+    List<Node> discoverAll();
+
+    boolean isDiscoverSupport();
+
+    boolean isDiscoverAllSupport();
 }

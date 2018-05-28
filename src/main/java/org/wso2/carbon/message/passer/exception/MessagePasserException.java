@@ -16,30 +16,23 @@
  * under the License.
  */
 
-package org.wso2.carbon.message.passer;
+package org.wso2.carbon.message.passer.exception;
 
-import java.io.Serializable;
+public class MessagePasserException extends Exception {
 
-public class MessageMetadata implements Serializable {
-
-    private static final long serialVersionUID = 3404922752365071691L;
-
-    private Node recipient;
-    private Node sender;
-
-    public Node getRecipient() {
-        return recipient;
+    public MessagePasserException() {
+        super();
     }
 
-    public void setRecipient(Node recipient) {
-        this.recipient = recipient;
+    public MessagePasserException(String message) {
+        super(message);
     }
 
-    public Node getSender() {
-        return sender;
+    public MessagePasserException(Throwable throwable) {
+        super(throwable);
     }
 
-    public void setSender(Node sender) {
-        this.sender = sender;
+    public MessagePasserException(String message, Throwable throwable) {
+        super(message, throwable);
     }
 }

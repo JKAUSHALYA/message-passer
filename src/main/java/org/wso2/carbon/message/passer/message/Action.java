@@ -16,8 +16,35 @@
  * under the License.
  */
 
-package org.wso2.carbon.message.passer;
+package org.wso2.carbon.message.passer.message;
 
-public interface EventListener {
+import org.wso2.carbon.message.passer.Node;
+
+public class Action {
+
+    private ActionType actionType;
+    private Node node;
+
+    public void setActionType(ActionType actionType) {
+        this.actionType = actionType;
+    }
+
+    public ActionType getType() {
+        return actionType;
+    }
+
+    public Node getNode() {
+        return node;
+    }
+
+    public void setNode(Node node) {
+        this.node = node;
+    }
+
+    public enum ActionType {
+        ADD,
+        REMOVE,
+        UPDATE
+    }
 
 }

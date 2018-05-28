@@ -16,30 +16,14 @@
  * under the License.
  */
 
-package org.wso2.carbon.message.passer.message;
+package org.wso2.carbon.message.passer.event;
 
-public class ActionMessage extends AbstractMessage<Action> {
+import org.wso2.carbon.message.passer.message.Message;
 
-    private Action action;
+public interface EventHandler {
 
-    @Override
-    public MessageMetadata getMetadata() {
+    boolean canHandle(Message message);
 
-        return null;
-    }
+    void process(Message message);
 
-    @Override
-    public void setMetadata(MessageMetadata metadata) {
-
-    }
-
-    @Override
-    public Action getPayLoad() {
-        return this.action;
-    }
-
-    @Override
-    public void setPayLoad(Action action) {
-        this.action = action;
-    }
 }

@@ -18,15 +18,56 @@
 
 package org.wso2.carbon.message.passer;
 
+import org.wso2.carbon.message.passer.event.MessageSendEventHandler;
+import org.wso2.carbon.message.passer.exception.MessagePasserException;
 import org.wso2.carbon.message.passer.message.Message;
+import org.wso2.carbon.message.passer.sender.MessageSender;
+
+import java.util.List;
 
 public class Dispatcher {
 
-    public static void dispatch(Message message) {
+    private NodeRepository nodeRepository;
+    private List<MessageSender> messageSenders;
+
+    public Dispatcher(NodeRepository nodeRepository, List<MessageSender> messageSenders) {
+        this.messageSenders = messageSenders;
+        this.nodeRepository = nodeRepository;
     }
 
-    public static MessageReceiveEventHandler dispatch(Message message, boolean sync) {
-        return null;
+    public void dispatch(Message message) throws MessagePasserException {
+
+        for (MessageSender messageSender : messageSenders) {
+            for (Node node : nodeRepository.getAllNodes()) {
+                messageSender.send(message, node);
+            }
+        }
     }
 
+    public void dispacth(Message message, Node node) throws MessagePasserException {
+
+        for (MessageSender messageSender : messageSenders) {
+            messageSender.send(message, node);
+        }
+    }
+
+    public void addMessageSender(MessageSender messageSender) {
+        messageSenders.add(messageSender);
+    }
+
+    public void removeMessageSender(MessageSender messageSender) {
+        messageSenders.remove(messageSender);
+    }
+
+    public void register(MessageSendEventHandler messageSendEventHandler) {
+        for (MessageSender messageSender : messageSenders) {
+            messageSender.register(messageSendEventHandler);
+        }
+    }
+
+    public void unregister(MessageSendEventHandler messageSendEventHandler) {
+        for (MessageSender messageSender : messageSenders) {
+            messageSender.unregister(messageSendEventHandler);
+        }
+    }
 }

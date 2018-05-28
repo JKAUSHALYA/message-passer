@@ -16,25 +16,29 @@
  * under the License.
  */
 
-package org.wso2.carbon.message.passer;
+package org.wso2.carbon.message.passer.discovery;
 
+import org.wso2.carbon.message.passer.message.Action;
+import org.wso2.carbon.message.passer.event.MessageReceiveEventHandler;
+import org.wso2.carbon.message.passer.Node;
 import org.wso2.carbon.message.passer.message.ActionMessage;
 import org.wso2.carbon.message.passer.message.Message;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public class TCPDiscoveryMechanism implements DiscoveryMechanism, MessageReceiveEventHandler {
 
-    private List<Node> nodeList;
+    private Consumer<Action> updateNodeList;
 
     @Override
-    public void discover(List<Node> registerNode) {
-        nodeList = registerNode;
+    public void discover(Consumer<Action> updateNodeList) {
+        this.updateNodeList = updateNodeList;
     }
 
     @Override
     public List<Node> discoverAll() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -55,25 +59,9 @@ public class TCPDiscoveryMechanism implements DiscoveryMechanism, MessageReceive
     @Override
     public void process(Message message) {
 
-        // TODO: Implement this.
         ActionMessage actionMessage = (ActionMessage) message;
-        switch (actionMessage.getPayLoad().getType()) {
-            case ADD: {
-                Node node = actionMessage.getPayLoad().getNode();
-                nodeList.add(node);
-                break;
-            }
-            case REMOVE: {
-                Node node = actionMessage.getPayLoad().getNode();
-                nodeList.add(node);
-                break;
-            }
-            case UPDATE: {
-                // TODO: Check the logic
-                Node node = actionMessage.getPayLoad().getNode();
-                nodeList.add(node);
-                break;
-            }
-        }
+        Action action = actionMessage.getPayLoad();
+
+        updateNodeList.accept(action);
     }
 }

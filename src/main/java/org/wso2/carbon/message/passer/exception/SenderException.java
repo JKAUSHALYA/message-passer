@@ -16,30 +16,24 @@
  * under the License.
  */
 
-package org.wso2.carbon.message.passer.message;
+package org.wso2.carbon.message.passer.exception;
 
-public class ActionMessage extends AbstractMessage<Action> {
+public class SenderException extends RuntimeException {
 
-    private Action action;
-
-    @Override
-    public MessageMetadata getMetadata() {
-
-        return null;
+    public SenderException() {
+        super();
     }
 
-    @Override
-    public void setMetadata(MessageMetadata metadata) {
-
+    public SenderException(String message) {
+        super(message);
     }
 
-    @Override
-    public Action getPayLoad() {
-        return this.action;
+    public SenderException(Throwable throwable) {
+        super(throwable);
     }
 
-    @Override
-    public void setPayLoad(Action action) {
-        this.action = action;
+    public SenderException(String message, Throwable throwable) {
+        super(message, throwable);
     }
+
 }

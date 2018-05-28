@@ -18,7 +18,7 @@
 
 package org.wso2.carbon.message.passer.message;
 
-import org.wso2.carbon.message.passer.MessageMetadata;
+import org.wso2.carbon.message.passer.exception.MessagePasserException;
 
 import java.io.Serializable;
 
@@ -32,5 +32,5 @@ public interface Message<T> extends Serializable {
 
     void setPayLoad(T t);
 
-    byte[] getMessageAsBytes();
+    byte[] getMessageAsBytes() throws MessagePasserException;
 }

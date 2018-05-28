@@ -18,6 +18,8 @@
 
 package org.wso2.carbon.message.passer.message;
 
+import org.wso2.carbon.message.passer.exception.MessagePasserException;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -27,7 +29,7 @@ public abstract class AbstractMessage<T> implements Message<T> {
     private static final long serialVersionUID = 1038473464277774254L;
 
     @Override
-    public byte[] getMessageAsBytes() {
+    public byte[] getMessageAsBytes() throws MessagePasserException {
 
         try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
              ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream)) {
@@ -35,8 +37,7 @@ public abstract class AbstractMessage<T> implements Message<T> {
             objectOutputStream.flush();
             return byteArrayOutputStream.toByteArray();
         } catch (IOException e) {
-            // TODO: Handle this.
-            return null;
+            throw new MessagePasserException("Error while converting message to a byte array.", e);
         }
     }
 }
